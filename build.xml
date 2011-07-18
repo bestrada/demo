@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!-- some comment for demo -->
+<project name="sonic-helloworld" basedir="." default="jar">
+	<property name="src.dir" value="src"/>
+	<property name="tools.dir" value="tools"/>
+	<property name="build.dir" value="build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	
+
+	<path id="lib">
+		<fileset dir="${build.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="/usr/lib/jvm/java-6-sun-1.6.0.22/jre/lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="/usr/share/tomcat5.5/common/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="run.classpath">
+		<pathelement location="${classes.dir}" />
+		<path refid="lib"/>
+	</path>
+
+	<target name="compile" depends="init">
+		<mkdir dir="${classes.dir}"/>
+		<javac destdir="${classes.dir}">
+			<src path="${src.dir}"/>
+			<classpath refid="lib"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="${build.dir}/sonic-helloword.jar">
+			<fileset dir="${classes.dir}"/>
+		</jar>
+	</target>
+
+	<target name="run" depends="compile">
+		<java classname="net.flixster.sonic.HelloSonic" classpathref="run.classpath" fork="true" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${classes.dir}"/>
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>		
+	</target>
+
+	
+	<!-- wsdl2java taskdef and target 
+	<taskdef name="codegen" classname="org.apache.axis2.tool.ant.AntCodegenTask" classpathref="lib" />
+
+	<target name="wsdl" >
+		<codegen wsdlfilename="wsdl/titledata.wsdl" output="soapclient" classpathref="lib"/>
+	</target>
+
+	<path id="project.classpath">
+		<pathelement location="${src.dir}" />
+	</path>
+
+
+	<path id="java">
+        <fileset dir="D:\Jars\Hibernate">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+-->
+</project>
+
