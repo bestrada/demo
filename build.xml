@@ -14,9 +14,6 @@
 		<fileset dir="/usr/lib/jvm/java-6-sun-1.6.0.22/jre/lib">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="/usr/share/tomcat5.5/common/lib">
-			<include name="*.jar" />
-		</fileset>
 	</path>
 
 	<path id="run.classpath">
