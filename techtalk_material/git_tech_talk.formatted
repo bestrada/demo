@@ -6,19 +6,19 @@ repo, index and commit
  * index: data structure the keeps track of the state of your working directory
    (XXX show the .git directory)
  * commit 
-   - verb = storing the change into the index/repo
+   - verb = storing the change into the repo
    - noun = the object/node that's created when commit your change.
    - commit objects are connected to each other in a commit graph 
      (XXX show gitk)
    - each commit has at least one parent
-     A merge commit has two parents.
+   - A merge commit has two parents.
 ===========================================================================
-branch, refs and heads
+refs, branch and heads
 ===========================================================================
+ * refs: There are two types of refs: branch and tag (we'll only talk about
+   branch)
  * branch: a liniage of commits
- * head: a pointer that points to the last commit in a branch
-   - head is a type of refs 
-     (the other one is tag, but I haven't had to use it)
+ * head: a pointer that points to the tip of a branch
    - each new commit will attach itself to the head and then the head will
      move to point to the new commit
      (XXX graph here)
@@ -32,16 +32,18 @@ clone, fetch, pull, push
 ===========================================================================
  * clone: downloading everything from a remote repo to create an identical 
           local repo
-   - after a clone, a tracking branch for master is automatically created
- * fetch: the act of downloading commit objects from upstream repo into 
-          the local index
+   - after a clone, a tracking branch for origin master is automatically created
+ * fetch: the act of downloading objects (commit and refs) from upstream repo 
+          into the local repo
           (XXX graph here)
  * pull: is fetch + advancing the local heads to point to the same positions
-         as the remote heads (if the remote heads are ahead)
+         as the remote heads, if the remote heads are ahead (technically
+         this is a fetch + merge, I'll explain later)
  * push: the act of uploading the commit objects to upstream repo and advancing
-         the remote heads to the same positions as the local head (if the local
-         heads are ahead)
-   - always pull before you push
+         the remote heads to the same positions as the local head. It's the
+         reverse of pull with some added restriction (we'll talk about that
+         later)
+ * always pull before you push
    (XXX ask questions at this point. People are likely to be confused)
 ===========================================================================
 checkout
@@ -220,6 +222,18 @@ flow 4: create branch -> checkout branch
 
 ===========================================================================
 flow 5: merging branches
+===========================================================================
+
+===========================================================================
+flow 6: abandoning uncommited change
+===========================================================================
+
+===========================================================================
+flow 7: undoing commited change with revert
+===========================================================================
+
+===========================================================================
+flow 8: undoing commited change with resert
 ===========================================================================
 
 ===========================================================================
