@@ -1,25 +1,19 @@
-Content-Type: text/enriched
-Text-Width: 70
-
 ===========================================================================
-<bold>repo, index and commit</bold>
+repo, index and commit
 ===========================================================================
  * repo: There is local and remote or upstream repo.
-
    - The upstream repo is usually called 'origin'. For now, just consider them synonimous
- * index: data structure in .git directory where all information/data of 
-          the local repo, remote repo and branches and heads positions are 
-          stored.
+ * index: data structure the keeps track of the state of your working directory
    (XXX show the .git directory)
  * commit 
    - verb = storing the change into the index/repo
    - noun = the object/node that's created when commit your change.
    - commit objects are connected to each other in a commit graph 
      (XXX show gitk)
-   - each commit have at least one parent
-
+   - each commit has at least one parent
+     A merge commit has two parents.
 ===========================================================================
-<bold>branch, refs and heads</bold>
+branch, refs and heads
 ===========================================================================
  * branch: a liniage of commits
  * head: a pointer that points to the last commit in a branch
@@ -33,9 +27,8 @@ Text-Width: 70
    - There are local heads and remote heads
      - git keeps track of the remote head using tracking branch
        (I'll show you how to deal with this later)
-
 ===========================================================================
-<bold>clone, fetch, pull, push</bold>
+clone, fetch, pull, push
 ===========================================================================
  * clone: downloading everything from a remote repo to create an identical 
           local repo
@@ -50,88 +43,64 @@ Text-Width: 70
          heads are ahead)
    - always pull before you push
    (XXX ask questions at this point. People are likely to be confused)
-
 ===========================================================================
-<bold>checkout</bold>
+checkout
 ===========================================================================
  * checkout: put files in the working directory from a specific commit
    - when you checkout a branch, you're checking out the commit where the
      branch head is pointing at.
-
 ===========================================================================
-simplest flow:<bold> clone -> edit -> commit -> push</bold>
+simplest flow: clone -> edit -> commit -> push
 ===========================================================================
-hendy@bali2:gitdemo$ <x-color><param>blue</param>ls</x-color>
-<x-color><param>brown</param><italic>there's nothing here</italic></x-color>
-hendy@bali2:gitdemo$ <x-color><param>blue</param>git clone ssh://git@cvs.flixsterqa.com:4949/demo</x-color>
-<x-color><param>green4</param>Initialized empty Git repository in /home/hendy/tmp/gitdemo/demo/.git/
+hendy@bali2:gitdemo$ ls
+there's nothing here
+hendy@bali2:gitdemo$ git clone ssh://git@cvs.flixsterqa.com:4949/demo
+Initialized empty Git repository in /home/hendy/tmp/gitdemo/demo/.git/
 remote: Counting objects: 4293, done.
 remote: Compressing objects: 100% (1683/1683), done.
 remote: Total 4293 (delta 2214), reused 4040 (delta 2064)
 Receiving objects: 100% (4293/4293), 54.51 MiB | 435 KiB/s, done.
 Resolving deltas: 100% (2214/2214), done.
 Checking out files: 100% (2379/2379), done.
-</x-color>hendy@bali2:gitdemo$ <x-color><param>blue</param>ls</x-color>
-
-demo<x-color><param>green4</param>
-
-</x-color>hendy@bali2:gitdemo$ <x-color><param>blue</param>cd demo</x-color>
-
-hendy@bali2:demo$ <x-color><param>blue</param>ls -a
-
-</x-color><x-color><param>green4</param>.  ..  build.xml  .classpath  </x-color><bold><x-color><param>red</param>.git</x-color></bold><x-color><param>green4</param>  .gitignore  .project  .settings  src  tools  wsdl
-
-</x-color><x-color><param>brown</param><italic>git clone created the <bold>.git</bold> directory where the local repository lives and at this
-
+hendy@bali2:gitdemo$ ls
+demo
+hendy@bali2:gitdemo$ cd demo
+hendy@bali2:demo$ ls -a
+.  ..  build.xml  .classpath  .git  .gitignore  .project  .settings  src  tools  wsdl
+git clone created the .git directory where the local repository lives and at this
 point it's identical to the remote one i.e.
-
-<bold>ssh://git@cvs.flixsterqa.com:4949/demo<italic>
-
-</italic>hendy@bali2:demo$ <x-color><param>blue</param>git status</x-color>
-<x-color><param>green4</param># On branch master
-nothing to commit (working directory clean)</x-color>
-hendy@bali2:demo$ <x-color><param>blue</param>emacs build.xml
-
-</x-color><x-color><param>brown</param><italic>edit the file</italic>
-
-</x-color>hendy@bali2:demo$ <x-color><param>blue</param>git status
-
-</x-color><x-color><param>green4</param># On branch master
+ssh://git@cvs.flixsterqa.com:4949/demo
+hendy@bali2:demo$ git status
+# On branch master
+nothing to commit (working directory clean)
+hendy@bali2:demo$ emacs build.xml
+edit the file
+hendy@bali2:demo$ git status
+# On branch master
 # Changed but not updated:
-#   (use "git add <<file>..." to update what will be committed)
-#   (use "git checkout -- <<file>..." to discard changes in working directory)
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
 #
 #	modified:   build.xml
 #
-no changes added to commit (use "git add" and/or "git commit -a")</x-color>
-hendy@bali2:demo$ <x-color><param>blue</param>gitk --all
-
-</x-color><x-color><param>brown</param><italic>show the gitk gui</italic>
-
-</x-color>hendy@bali2:demo$ <x-color><param>blue</param>gitk add .
-
-</x-color>hendy@bali2:demo$ <x-color><param>blue</param>git status</x-color>
-
-<x-color><param>green4</param># On branch master
+no changes added to commit (use "git add" and/or "git commit -a")
+hendy@bali2:demo$ gitk --all
+show the gitk gui
+hendy@bali2:demo$ gitk add .
+hendy@bali2:demo$ git status
+# On branch master
 # Changes to be committed:
-#   (use "git reset HEAD <<file>..." to unstage)
+#   (use "git reset HEAD <file>..." to unstage)
 #
 #	modified:   build.xml
 #
-</x-color>hendy@bali2:demo$ <x-color><param>blue</param>git commit
-
-</x-color><x-color><param>brown</param><italic>an editor is launched. Fill the commit comment
-
+hendy@bali2:demo$ git commit
+an editor is launched. Fill the commit comment
 (or leave it blank to abort the commit process)
-
-</italic></x-color>hendy@bali2:demo$ <x-color><param>blue</param>gitk --all
-
-</x-color><x-color><param>brown</param><italic>show the gitk gui. Notice that the master is one commit ahead
-
+hendy@bali2:demo$ gitk --all
+show the gitk gui. Notice that the master is one commit ahead
 of the origin/master.
-
-</italic></x-color>hendy@bali2:demo$<x-color><param>green4</param> </x-color><x-color><param>blue</param>git push</x-color><x-color><param>green4</param>
-
+hendy@bali2:demo$ git push
 Counting objects: 5, done.
 Delta compression using up to 2 threads.
 Compressing objects: 100% (3/3), done.
@@ -140,14 +109,13 @@ Total 3 (delta 2), reused 0 (delta 0)
 To ssh://git@cvs.flixsterqa.com:4949/demo
    3f6dd1d..1112a98  master -> master
 
-
-</x-color>===========================================================================
-flow 2:<bold> edit -> commit -> pull -> merge -> push</bold>
+===========================================================================
+flow 2: edit -> commit -> pull -> merge -> push
 ===========================================================================
 hendy@bali2:demo$ gitk --all
 hendy@bali2:demo$ e build.xml 
 hendy@bali2:demo$ git commit -a
-<x-color><param>green4</param>[master ca00c10] remove lib from ant classpath
+[master ca00c10] remove lib from ant classpath
  1 files changed, 0 insertions(+), 3 deletions(-)
 hendy@bali2:demo$ git push
 To ssh://git@cvs.flixsterqa.com:4949/demo
@@ -156,11 +124,9 @@ error: failed to push some refs to 'ssh://git@cvs.flixsterqa.com:4949/demo'
 To prevent you from losing history, non-fast-forward updates were rejected
 Merge the remote changes before pushing again.  See the 'Note about
 fast-forwards' section of 'git push --help' for details.
-
-</x-color><italic><x-color><param>brown</param>oops, we're not in sync with the origin</x-color></italic><x-color><param>green4</param>
-</x-color>hendy@bali2:demo$ git pull
-
-<x-color><param>green4</param>remote: Counting objects: 13, done.
+oops, we're not in sync with the origin
+hendy@bali2:demo$ git pull
+remote: Counting objects: 13, done.
 remote: Compressing objects: 100% (3/3), done.
 remote: Total 7 (delta 1), reused 0 (delta 0)
 Unpacking objects: 100% (7/7), done.
@@ -169,9 +135,9 @@ From ssh://cvs.flixsterqa.com:4949/demo
 Merge made by recursive.
  src/net/flixster/sonic/HelloSonic.java |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
-</x-color>hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ gitk --all
 hendy@bali2:demo$ git push
-<x-color><param>green4</param>Counting objects: 8, done.
+Counting objects: 8, done.
 Delta compression using up to 2 threads.
 Compressing objects: 100% (5/5), done.
 Writing objects: 100% (5/5), 612 bytes, done.
@@ -179,25 +145,24 @@ Total 5 (delta 1), reused 0 (delta 0)
 To ssh://git@cvs.flixsterqa.com:4949/demo
    82cf9f8..9dd1576  master -> master
 
-
-</x-color>===========================================================================
-flow 3:<bold> edit -> commit -> pull -> merge-conflict -> resolve -> commit -> push</bold>
+===========================================================================
+flow 3: edit -> commit -> pull -> merge-conflict -> resolve -> commit -> push
 ===========================================================================
 hendy@bali2:demo$ gitk --all
 hendy@bali2:demo$ e build.xml 
 hendy@bali2:demo$ git commit -a
-<x-color><param>green4</param>[master a242c7b] replace tomcat5.5 with tomcat6 in build classpath
+[master a242c7b] replace tomcat5.5 with tomcat6 in build classpath
  1 files changed, 1 insertions(+), 1 deletions(-)
-</x-color>hendy@bali2:demo$ git push<x-color><param>green4</param>
+hendy@bali2:demo$ git push
 To ssh://git@cvs.flixsterqa.com:4949/demo
  ! [rejected]        master -> master (non-fast-forward)
 error: failed to push some refs to 'ssh://git@cvs.flixsterqa.com:4949/demo'
 To prevent you from losing history, non-fast-forward updates were rejected
 Merge the remote changes before pushing again.  See the 'Note about
 fast-forwards' section of 'git push --help' for details.
-</x-color>hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ gitk --all
 hendy@bali2:demo$ git pull
-<x-color><param>green4</param>remote: Counting objects: 5, done.
+remote: Counting objects: 5, done.
 remote: Compressing objects: 100% (3/3), done.
 Unpacking objects: 100% (3/3), done.
 remote: Total 3 (delta 1), reused 0 (delta 0)
@@ -206,66 +171,61 @@ From ssh://cvs.flixsterqa.com:4949/demo
 Auto-merging build.xml
 CONFLICT (content): Merge conflict in build.xml
 Automatic merge failed; fix conflicts and then commit the result.
-</x-color>hendy@bali2:demo$ git status
-<x-color><param>green4</param># On branch master
+hendy@bali2:demo$ git status
+# On branch master
 # Your branch and 'origin/master' have diverged,
 # and have 1 and 1 different commit(s) each, respectively.
 #
 # Unmerged paths:
-#   (use "git add/rm <<file>..." as appropriate to mark resolution)
+#   (use "git add/rm <file>..." as appropriate to mark resolution)
 #
 #	both modified:      build.xml
 #
 no changes added to commit (use "git add" and/or "git commit -a")
-</x-color>hendy@bali2:demo$ git diff build.xml
-<x-color><param>green4</param>diff --cc build.xml
+hendy@bali2:demo$ git diff build.xml
+diff --cc build.xml
 index 5f234c0,4d1e6f9..0000000
 --- a/build.xml
 +++ b/build.xml
 @@@ -14,9 -14,6 +14,12 @@@
-                <<fileset dir="/usr/lib/jvm/java-6-sun-1.6.0.22/jre/lib">
-                        <<include name="*.jar" />
-                <</fileset>
-++<<<<<<<<<<<<<< HEAD
- +              <<fileset dir="/usr/share/tomcat6/common/lib">
- +                      <<include name="*.jar" />
- +              <</fileset>
+                <fileset dir="/usr/lib/jvm/java-6-sun-1.6.0.22/jre/lib">
+                        <include name="*.jar" />
+                </fileset>
+++<<<<<<< HEAD
+ +              <fileset dir="/usr/share/tomcat6/common/lib">
+ +                      <include name="*.jar" />
+ +              </fileset>
 ++=======
 ++>>>>>>> 041b93fda0fd666b14216b2a5fa1f9874294d258
-        <</path>
+        </path>
   
-        <<path id="run.classpath">
-
-</x-color>hendy@bali2:demo$ e build.xml
-
+        <path id="run.classpath">
+hendy@bali2:demo$ e build.xml
 hendy@bali2:demo$ git commit -a
-
-<x-color><param>green4</param>[master 46cf2cf] Merge remote branch 'origin/master'
-
-</x-color>hendy@bali2:demo$ git push
-<x-color><param>green4</param>Counting objects: 8, done.
+[master 46cf2cf] Merge remote branch 'origin/master'
+hendy@bali2:demo$ git push
+Counting objects: 8, done.
 Delta compression using up to 2 threads.
 Compressing objects: 100% (4/4), done.
 Writing objects: 100% (4/4), 556 bytes, done.
 Total 4 (delta 1), reused 0 (delta 0)
 To ssh://git@cvs.flixsterqa.com:4949/demo
    041b93f..46cf2cf  master -> master
-</x-color>hendy@bali2:demo$ gitk --allnnn
-
-
-===========================================================================
-flow 4:<bold> create branch -> checkout branch
-
-         -></bold> <bold>edit -> commit -> push branch</bold>
-===========================================================================
-
+hendy@bali2:demo$ gitk --allnnn
 
 ===========================================================================
-flow 5:<bold> merging branches</bold>
+flow 4: create branch -> checkout branch
+         -> edit -> commit -> push branch
 ===========================================================================
 
+===========================================================================
+flow 5: merging branches
+===========================================================================
 
 ===========================================================================
-<bold>Personal branch</bold>
+'merge branch1 into branch2' vs 'merge branch2 into branch1'
 ===========================================================================
-</bold></italic></x-color>
+
+===========================================================================
+Personal branch
+===========================================================================
