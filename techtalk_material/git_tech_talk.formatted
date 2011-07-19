@@ -51,6 +51,13 @@ checkout
  * checkout: put files in the working directory from a specific commit
    - when you checkout a branch, you're checking out the commit where the
      branch head is pointing at.
+
+===========================================================================
+The most usefull commands
+===========================================================================
+git status
+gitk --all
+
 ===========================================================================
 simplest flow: clone -> edit -> commit -> push
 ===========================================================================
