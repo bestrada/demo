@@ -226,26 +226,249 @@ hendy@bali2:demo$ gitk --allnnn
 flow 4: create branch -> checkout branch
          -> edit -> commit -> push branch
 ===========================================================================
+hendy@bali2:demo$ git branch --set-upstream feature1
+Branch feature1 set up to track local branch master.
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git status
+# On branch master
+nothing to commit (working directory clean)
+hendy@bali2:demo$ git checkout feature1
+Switched to branch 'feature1'
+hendy@bali2:demo$ e src/net/flixster/sonic/HelloSonic.java 
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git status
+# On branch feature1
+# Changed but not updated:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   src/net/flixster/sonic/HelloSonic.java
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+hendy@bali2:demo$ git commit -a
+[feature1 8eec6c9] tell Sonic this is 2011!
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git checkout master
+Switched to branch 'master'
+hendy@bali2:demo$ e build.xml 
+hendy@bali2:demo$ git status
+# On branch master
+# Changed but not updated:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   build.xml
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+hendy@bali2:demo$ git commit -a
+[master 71ec608] remove tomcat library from build.xml
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git push
+Counting objects: 5, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 301 bytes, done.
+Total 3 (delta 2), reused 0 (delta 0)
+To ssh://git@cvs.flixsterqa.com:4949/demo
+   ff65b20..71ec608  master -> master
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git checkout feature1 
+Switched to branch 'feature1'
+Your branch and 'master' have diverged,
+and have 1 and 1 different commit(s) each, respectively.
+hendy@bali2:demo$ git push
+Everything up-to-date
+hendy@bali2:demo$ git push origin feature1
+Counting objects: 13, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (7/7), 687 bytes, done.
+Total 7 (delta 1), reused 0 (delta 0)
+To ssh://git@cvs.flixsterqa.com:4949/demo
+ * [new branch]      feature1 -> feature1
+hendy@bali2:demo$ gitk --all
 
 ===========================================================================
 flow 5: merging branches
 ===========================================================================
+hendy@bali2:demo$ git checkout master
+Switched to branch 'master'
+hendy@bali2:demo$ git help merge
+hendy@bali2:demo$ git merge feature1 
+Merge made by recursive.
+ src/net/flixster/sonic/HelloSonic.java |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+hendy@bali2:demo$ git status
+# On branch master
+# Your branch is ahead of 'origin/master' by 2 commits.
+#
+nothing to commit (working directory clean)
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git push
+Counting objects: 4, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (2/2), 282 bytes, done.
+Total 2 (delta 1), reused 0 (delta 0)
+To ssh://git@cvs.flixsterqa.com:4949/demo
+   71ec608..d23768b  master -> master
+hendy@bali2:demo$ gitk --all
 
 ===========================================================================
-flow 6: abandoning uncommited change
+flow 5-1: 'merge branch1 into branch2' vs 'merge branch2 into branch1'
 ===========================================================================
+hendy@bali2:demo$ git checkout feature1
+Switched to branch 'feature1'
+Your branch is behind 'master' by 2 commits, and can be fast-forwarded.
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git merge master
+Updating 8eec6c9..d23768b
+Fast-forward
+ build.xml |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+hendy@bali2:demo$ gitk --all
+hendy@bali2:demo$ git push origin feature1
+Total 0 (delta 0), reused 0 (delta 0)
+To ssh://git@cvs.flixsterqa.com:4949/demo
+   8eec6c9..d23768b  feature1 -> feature1
+hendy@bali2:demo$ gitk --all
+
+===========================================================================
+flow 6a: abandoning uncommited change
+===========================================================================
+hendy@bali2:demo$ git diff build.xml
+diff --git a/build.xml b/build.xml
+index 4d1e6f9..6fb9e25 100644
+--- a/build.xml
++++ b/build.xml
+@@ -1,5 +1,7 @@
+ <?xml version="1.0"?>
+ 
++I messed up
++
+ <project name="sonic-helloworld" basedir="." default="jar">
+        <property name="src.dir" value="src"/>
+        <property name="tools.dir" value="tools"/>
+hendy@bali2:demo$ git status
+# On branch feature1
+# Changed but not updated:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   build.xml
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+hendy@bali2:demo$ git checkout -- build.xml
+hendy@bali2:demo$ git status
+# On branch feature1
+nothing to commit (working directory clean)
+hendy@bali2:demo$ git diff build.xml
+
+===========================================================================
+flow 6b: abandoning uncommited change but already added to index
+===========================================================================
+hendy@bali2:demo$ e build.xml
+hendy@bali2:demo$ git add
+Nothing specified, nothing added.
+Maybe you wanted to say 'git add .'?
+hendy@bali2:demo$ git add .
+hendy@bali2:demo$ git status
+# On branch feature1
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	modified:   build.xml
+#
+hendy@bali2:demo$ git diff --cached
+diff --git a/build.xml b/build.xml
+index 4d1e6f9..1b159a6 100644
+--- a/build.xml
++++ b/build.xml
+@@ -1,5 +1,7 @@
+ <?xml version="1.0"?>
+ 
++I messed up again
++
+ <project name="sonic-helloworld" basedir="." default="jar">
+        <property name="src.dir" value="src"/>
+        <property name="tools.dir" value="tools"/>
+hendy@bali2:demo$ git reset HEAD build.xml
+Unstaged changes after reset:
+M	build.xml
+hendy@bali2:demo$ git status
+# On branch feature1
+# Changed but not updated:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   build.xml
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+hendy@bali2:demo$ git diff build.xml
+diff --git a/build.xml b/build.xml
+index 4d1e6f9..1b159a6 100644
+--- a/build.xml
++++ b/build.xml
+@@ -1,5 +1,7 @@
+ <?xml version="1.0"?>
+ 
++I messed up again
++
+ <project name="sonic-helloworld" basedir="." default="jar">
+        <property name="src.dir" value="src"/>
+        <property name="tools.dir" value="tools"/>
+hendy@bali2:demo$ git checkout -- build.xml
+hendy@bali2:demo$ git diff build.xml
 
 ===========================================================================
 flow 7: undoing commited change with revert
 ===========================================================================
+hendy@bali2:demo$ git revert HEAD
+Finished one revert.
+[feature1 2f956b4] Revert "break build.xml"
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+hendy@bali2:demo$ gitk --all
 
 ===========================================================================
 flow 8: undoing commited change with resert
 ===========================================================================
+hendy@bali2:demo$ git log HEAD~3..HEAD
+commit 2f956b4d93e5645b02fd4a430ec3bfe43cf7aa43
+Author: hendy <hendy@flixster-inc.com>
+Date:   Tue Jul 19 15:51:28 2011 -0700
 
-===========================================================================
-'merge branch1 into branch2' vs 'merge branch2 into branch1'
-===========================================================================
+    Revert "break build.xml"
+    
+    This reverts commit 4a05564e8ccb71f3b20b2d734a16bfefd3e3de33.
+
+commit 4a05564e8ccb71f3b20b2d734a16bfefd3e3de33
+Author: hendy <hendy@flixster-inc.com>
+Date:   Tue Jul 19 15:50:09 2011 -0700
+
+    break build.xml
+
+commit d23768b32d75195a8d412665658928c8b281b945
+Merge: 71ec608 8eec6c9
+Author: hendy <hendy@flixster-inc.com>
+Date:   Tue Jul 19 15:16:17 2011 -0700
+
+    Merge branch 'feature1'
+
+commit 8eec6c92363ff9592c5e8e7b4fecc6f9c7e789fc
+Author: hendy <hendy@flixster-inc.com>
+Date:   Tue Jul 19 15:02:07 2011 -0700
+
+    tell Sonic this is 2011!
+hendy@bali2:demo$ git reset --hard d23768b3
+HEAD is now at d23768b Merge branch 'feature1'
+hendy@bali2:demo$ gitk --all &
+[2] 28432
+hendy@bali2:demo$ git status
+# On branch feature1
+nothing to commit (working directory clean)
+hendy@bali2:demo$ 
 
 ===========================================================================
 Personal branch
